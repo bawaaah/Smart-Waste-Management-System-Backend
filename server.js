@@ -4,6 +4,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+
+const wasteRoutes = require('./routes/waste');
+const deviceRoutes = require('./routes/device');
+
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
@@ -12,7 +16,7 @@ const bodyParser = require("body-parser");
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -25,6 +29,8 @@ mongoose
   .catch(err => console.log(err));
 
 // Use Routes
+app.use('/api/waste', wasteRoutes);
+app.use('/api/device', deviceRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
