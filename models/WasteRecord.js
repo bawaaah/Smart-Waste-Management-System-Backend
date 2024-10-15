@@ -18,7 +18,10 @@ const WasteRecordSchema = new mongoose.Schema({
     deviceId: {
         type: String,
         required: true, // To link to the specific device
-    }
+    },
+    deviceType:{
+        type: String,
+    },
 });
 
 module.exports = mongoose.model('WasteRecord', WasteRecordSchema);

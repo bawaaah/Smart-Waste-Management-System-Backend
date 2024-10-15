@@ -1,6 +1,8 @@
 // controllers/deviceController.js
 const Device = require('../models/Device');
 const QRCode = require('qrcode'); // Ensure QRCode is imported
+const MalfunctionReport = require('../models/MalfunctionReport');
+
 
 
 exports.updateDeviceStatus = async (req, res) => {
@@ -70,3 +72,47 @@ exports.getAllDevices = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Check if device exists
+exports.checkDeviceExists = async (req, res) => {
+    try {
+        const { deviceId } = req.params;
+        const device = await Device.findOne({ deviceId: deviceId });
+
+        if (!device) {
+            return res.status(404).json({ exists: false });
+        }
+        
+        return res.status(200).json({ exists: true });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error checking device' });
+    }
+};
+
+// Report a malfunction
+exports.reportMalfunction = async (req, res) => {
+    try {
+        const { deviceId, message } = req.body;
+
+        const device = await Device.findOne({ deviceId: deviceId });
+
+        if (!device) {
+            return res.status(404).json({ message: 'Device not found' });
+        }
+
+        // Update the device's status to 'malfunctioned'
+        device.status = 'Malfunction';
+        await device.save();
+
+        const malfunctionReport = new MalfunctionReport({
+            deviceId,
+            message,
+        });
+
+        await malfunctionReport.save();
+        return res.status(201).json({ message: 'Malfunction report submitted successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error submitting report' });
+    }
+};
+

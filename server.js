@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 
 const wasteRoutes = require('./routes/waste');
 const deviceRoutes = require('./routes/device');
+const malfunctionReport = require('./routes/malfunctionReport');
+
 
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -31,6 +33,7 @@ mongoose
 // Use Routes
 app.use('/api/waste', wasteRoutes);
 app.use('/api/device', deviceRoutes);
+app.use('/api/malfunctionReport', malfunctionReport);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
