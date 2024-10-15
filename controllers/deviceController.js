@@ -1,5 +1,7 @@
 // controllers/deviceController.js
 const Device = require('../models/Device');
+const QRCode = require('qrcode'); // Ensure QRCode is imported
+
 
 exports.updateDeviceStatus = async (req, res) => {
     try {
@@ -27,8 +29,11 @@ exports.getDeviceStatus = async (req, res) => {
 
 exports.addDevice = async (req, res) => {
     try {
-        const { deviceId, status,spaceLeft,deviceType,capacity } = req.body;
-        
+        const { status, deviceType, capacity } = req.body;
+
+        // Generate a unique device ID based on the device type
+        const deviceId = `${deviceType.substring(0, 3).toUpperCase()}-${Date.now()}`; // Example: "PLA-1685000000000"
+
         // Check if device already exists
         const existingDevice = await Device.findOne({ deviceId });
         if (existingDevice) {
@@ -38,10 +43,16 @@ exports.addDevice = async (req, res) => {
         const newDevice = new Device({
             deviceId,
             status: status || 'Active', // Default to 'Active' if status not provided
-            spaceLeft:100,
+            spaceLeft: capacity,
             deviceType,
-            capacity
+            capacity,
         });
+
+        // Generate QR code
+        const qrCodeData = await QRCode.toDataURL(deviceId); // Generate QR code using deviceId
+
+        // Save the QR code in the device record
+        newDevice.qrCode = qrCodeData;
 
         await newDevice.save();
         res.status(201).json(newDevice);
