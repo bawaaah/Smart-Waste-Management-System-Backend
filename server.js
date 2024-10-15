@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+const authRoutes = require('./routes/authRoutes');
+
 
 // Load environment variables
 dotenv.config();
@@ -29,6 +31,9 @@ app.use(express.json());
 app.use('/api/collector', require('./routes/collectorRoutes'));
 app.use('/api/bin', require('./routes/binRoutes'));
 app.use('/api/pickup', require('./routes/pickupRoutes'));
+
+app.use('/api/auth', authRoutes);
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
