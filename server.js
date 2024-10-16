@@ -12,6 +12,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const authRoutes = require('./routes/authRoutes');
+const scanRoutes = require('./routes/scanRoutes');
+const scanRecords = require('./routes/scanRecord');
 
 
 // Load environment variables
@@ -33,9 +35,9 @@ mongoose
 // Use Routes
 app.use(express.json());
 app.use('/api/collector', require('./routes/collectorRoutes'));
-app.use('/api/bin', require('./routes/binRoutes'));
 app.use('/api/pickup', require('./routes/pickupRoutes'));
-
+app.use('/api/scan', scanRoutes);
+app.use('/api/records', scanRecords);
 app.use('/api/auth', authRoutes);
 
 app.use('/api/waste', wasteRoutes);
