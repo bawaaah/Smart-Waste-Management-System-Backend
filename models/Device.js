@@ -29,6 +29,9 @@ const DeviceSchema = new mongoose.Schema({
     },
     qrCode: { // New field for QR code
         type: String,
+    },
+    userId: {
+        type: String
     }
 });
 

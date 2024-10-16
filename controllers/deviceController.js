@@ -31,7 +31,7 @@ exports.getDeviceStatus = async (req, res) => {
 
 exports.addDevice = async (req, res) => {
     try {
-        const { status, deviceType, capacity } = req.body;
+        const { status, deviceType, capacity, userId} = req.body;
 
         // Generate a unique device ID based on the device type
         const deviceId = `${deviceType.substring(0, 3).toUpperCase()}-${Date.now()}`; // Example: "PLA-1685000000000"
@@ -48,6 +48,7 @@ exports.addDevice = async (req, res) => {
             spaceLeft: capacity,
             deviceType,
             capacity,
+            userId
         });
 
         // Generate QR code
@@ -66,7 +67,8 @@ exports.addDevice = async (req, res) => {
 // Function to get all devices
 exports.getAllDevices = async (req, res) => {
     try {
-        const devices = await Device.find();
+        const userId = req.params.userId; // Get user ID from request parameters
+        const devices = await Device.find({ userId: userId });
         res.status(200).json(devices);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -92,7 +94,7 @@ exports.checkDeviceExists = async (req, res) => {
 // Report a malfunction
 exports.reportMalfunction = async (req, res) => {
     try {
-        const { deviceId, message } = req.body;
+        const { deviceId, message, userId } = req.body;
 
         const device = await Device.findOne({ deviceId: deviceId });
 
@@ -107,6 +109,7 @@ exports.reportMalfunction = async (req, res) => {
         const malfunctionReport = new MalfunctionReport({
             deviceId,
             message,
+            userId
         });
 
         await malfunctionReport.save();

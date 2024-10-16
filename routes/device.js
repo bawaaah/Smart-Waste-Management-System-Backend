@@ -4,12 +4,12 @@ const { updateDeviceStatus, getDeviceStatus, addDevice,getAllDevices,checkDevice
 const router = express.Router();
 
 router.post('/status', updateDeviceStatus);
-router.get('/:deviceId', getDeviceStatus);
+router.get('/deviceID/:deviceId', getDeviceStatus);
 
 // New route: Add new device manually
 router.post('/add', addDevice);
 // Fetch all devices
-router.get('/', getAllDevices);
+router.get('/:userId', getAllDevices);
 // Check if the device exists
 router.get('/device/:deviceId', checkDeviceExists);
 

@@ -22,6 +22,9 @@ const WasteRecordSchema = new mongoose.Schema({
     deviceType:{
         type: String,
     },
+    userId: {
+        type: String
+    }
 });
 
 module.exports = mongoose.model('WasteRecord', WasteRecordSchema);

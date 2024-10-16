@@ -4,9 +4,9 @@ const { createWasteRecord, getWasteRecordsByDeviceId, addManualWasteRecord,getAl
 const router = express.Router();
 
 router.post('/update', createWasteRecord);
-router.get('/:deviceId', getWasteRecordsByDeviceId);
+router.get('/device/:deviceId', getWasteRecordsByDeviceId);
 router.post('/add', addManualWasteRecord);
-router.get('/', getAllWasteRecords);
+router.get('/:userId', getAllWasteRecords);
 
 
 module.exports = router;

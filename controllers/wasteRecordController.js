@@ -54,7 +54,7 @@ exports.getWasteRecordsByDeviceId = async (req, res) => {
 // New function: Add manual waste record
 exports.addManualWasteRecord = async (req, res) => {
     try {
-        const { weight, deviceId,deviceType } = req.body;
+        const { weight, deviceId,deviceType,userId } = req.body;
 
         // Check if the device exists
         const device = await Device.findOne({ deviceId });
@@ -66,7 +66,8 @@ exports.addManualWasteRecord = async (req, res) => {
         const newWasteRecord = new WasteRecord({
             weight,
             deviceId,
-            deviceType
+            deviceType,
+            userId
         });
 
         // Save the new waste record
@@ -93,7 +94,8 @@ exports.addManualWasteRecord = async (req, res) => {
 
 exports.getAllWasteRecords = async (req, res) => {
     try {
-        const records = await WasteRecord.find().sort({ date: 1 }); // Fetch all records, sorted by most recent
+        const userId = req.params.userId;
+        const records = await WasteRecord.find({userId: userId}).sort({ date: 1 }); // Fetch all records, sorted by most recent
         res.status(200).json(records);
     } catch (error) {
         res.status(500).json({ message: error.message });

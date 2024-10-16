@@ -5,7 +5,8 @@ const Device = require('../models/Device');
 // Fetch all malfunction reports
 exports.getMalfunctionReports = async (req, res) => {
     try {
-        const reports = await MalfunctionReport.find(); // Optionally populate device details
+        const userId = req.params.userId;
+        const reports = await MalfunctionReport.find({userId: userId}); // Optionally populate device details
         return res.status(200).json(reports);
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching reports' });
