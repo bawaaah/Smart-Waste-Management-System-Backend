@@ -9,6 +9,7 @@ const wasteRoutes = require('./routes/waste');
 const deviceRoutes = require('./routes/device');
 const malfunctionReport = require('./routes/malfunctionReport');
 const authRoutes = require("./routes/auth");
+const reportRoutes = require('./routes/report');
 
 
 const cors = require("cors");
@@ -36,6 +37,7 @@ app.use('/api/waste', wasteRoutes);
 app.use('/api/device', deviceRoutes);
 app.use('/api/malfunctionReport', malfunctionReport);
 app.use("/api/auth", authRoutes);
+app.use('/api/report', reportRoutes);
 
 
 app.listen(PORT, () => {

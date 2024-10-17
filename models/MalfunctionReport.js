@@ -15,6 +15,9 @@ const MalfunctionReportSchema = new mongoose.Schema({
     },
     userId: {
         type: String
+    },
+    reply: {
+        type: String
     }
 });
 

@@ -64,11 +64,20 @@ exports.addDevice = async (req, res) => {
     }
 };
 
-// Function to get all devices
+// Function to get all devices by ID
 exports.getAllDevices = async (req, res) => {
     try {
         const userId = req.params.userId; // Get user ID from request parameters
         const devices = await Device.find({ userId: userId });
+        res.status(200).json(devices);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllDevicesAdmin = async (req, res) => {
+    try {
+        const devices = await Device.find();
         res.status(200).json(devices);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -119,3 +128,36 @@ exports.reportMalfunction = async (req, res) => {
     }
 };
 
+// Update device status after reply
+exports.updateDeviceStatusReport = async (req, res) => {
+    try {
+        const { deviceId, status } = req.body;
+
+        const device = await Device.findOne({ deviceId: deviceId });
+        if (!device) {
+            return res.status(404).json({ message: 'Device not found' });
+        }
+
+        device.status = status; // Update the status to the new one provided
+        await device.save();
+
+        return res.status(200).json({ message: 'Device status updated successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error updating device status' });
+    }
+};
+
+exports.deleteDevice = async (req, res) => {
+    try {
+        const { deviceId } = req.params;
+        const deletedDevice = await Device.findOneAndDelete({ deviceId });
+
+        if (!deletedDevice) {
+            return res.status(404).json({ message: 'Device not found' });
+        }
+
+        return res.status(200).json({ message: 'Device deleted successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error deleting device' });
+    }
+};

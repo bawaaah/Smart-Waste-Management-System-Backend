@@ -54,12 +54,17 @@ exports.getWasteRecordsByDeviceId = async (req, res) => {
 // New function: Add manual waste record
 exports.addManualWasteRecord = async (req, res) => {
     try {
-        const { weight, deviceId,deviceType,userId } = req.body;
+        const { weight, deviceId, deviceType, userId } = req.body;
 
         // Check if the device exists
         const device = await Device.findOne({ deviceId });
         if (!device) {
             return res.status(404).json({ message: 'Device not found' });
+        }
+
+        // Check if the device is malfunctioning
+        if (device.status === 'Malfunction') {
+            return res.status(400).json({ message: 'Cannot add waste. The device is malfunctioning.' });
         }
 
         // Create a new waste record
@@ -92,10 +97,20 @@ exports.addManualWasteRecord = async (req, res) => {
     }
 };
 
+
 exports.getAllWasteRecords = async (req, res) => {
     try {
         const userId = req.params.userId;
         const records = await WasteRecord.find({userId: userId}).sort({ date: 1 }); // Fetch all records, sorted by most recent
+        res.status(200).json(records);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllWasteRecordsAdmin = async (req, res) => {
+    try {
+        const records = await WasteRecord.find().sort({ date: 1 }); // Fetch all records, sorted by most recent
         res.status(200).json(records);
     } catch (error) {
         res.status(500).json({ message: error.message });
