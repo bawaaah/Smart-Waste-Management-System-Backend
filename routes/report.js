@@ -127,9 +127,9 @@ router.post('/generate', async (req, res) => {
             lastUpdated: device.lastUpdated.toISOString().split('T')[0],
         }));
 
-        console.log('Waste Records:', reportData);
-        console.log('Malfunction Reports:', malfunctionData);
-        console.log('Device Data:', deviceData);
+        // console.log('Waste Records:', reportData);
+        // console.log('Malfunction Reports:', malfunctionData);
+        // console.log('Device Data:', deviceData);
 
         if (reportFormat === 'PDF') {
             const pdfData = await generatePDF(reportData, malfunctionData, deviceData);
