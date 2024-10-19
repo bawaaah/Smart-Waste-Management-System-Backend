@@ -8,7 +8,7 @@ const router = express.Router();
 // QR Scan Endpoint
 router.post('/scan', async (req, res) => {
   try {
-    const { qrCod,collectorId } = req.body;
+    const { qrCode,collectorId } = req.body;
 
     // Find device by QR code
     const device = await Device.findOne({ qrCode });

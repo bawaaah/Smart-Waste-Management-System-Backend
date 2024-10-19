@@ -9,7 +9,7 @@ const router = express.Router();
 // Endpoint to get scan records for the logged-in collector
 router.get('/history/:collectorId', async (req, res) => {
   try {
-    const { collectorId } =req.params.collectorId.trim(); // Clean the collectorId by trimming any whitespace or newlines
+    const { collectorId } =req.params; // Clean the collectorId by trimming any whitespace or newlines
 
     // Continue with the rest of your logic using the cleaned collectorId
     ;
