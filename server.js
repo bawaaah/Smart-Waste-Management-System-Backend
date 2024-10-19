@@ -20,7 +20,7 @@ const scanRecords = require('./routes/scanRecord');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -33,6 +33,10 @@ mongoose
   .catch(err => console.log(err));
 
 // Use Routes
+app.get('/test', (req, res) => {
+  res.send('App is running successfully');
+});
+
 app.use(express.json());
 app.use('/api/collector', require('./routes/collectorRoutes'));
 app.use('/api/pickup', require('./routes/pickupRoutes'));
