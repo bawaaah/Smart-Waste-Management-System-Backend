@@ -11,7 +11,6 @@ const authRoutes = require("./routes/auth");
 const wasteRoutes = require('./routes/waste');
 const deviceRoutes = require('./routes/device');
 const malfunctionReport = require('./routes/malfunctionReport');
-const authRoutes = require("./routes/auth");
 const reportRoutes = require('./routes/report');
 
 
@@ -42,7 +41,6 @@ mongoose
 
 // Routes
 app.use("/api/collections", collectionsRoute);
-app.use("/api/auth", authRoutes);
 
 // Use Routes
 app.use('/api/payments', paymentRoutes);
