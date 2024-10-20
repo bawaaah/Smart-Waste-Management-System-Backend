@@ -45,4 +45,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Route to fetch total users
+router.get("/totalUsers", async (req, res) => {
+  try {
+    const totalUsers = await User.find(); 
+    res.status(200).json(totalUsers);
+  } catch (error) {
+    res.status(500).json({ message: "Server error: " + error.message });
+  }
+});
 module.exports = router;

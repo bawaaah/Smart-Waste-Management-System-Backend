@@ -1,0 +1,118 @@
+// controllers/wasteRecordController.js
+const WasteRecord = require('../models/WasteRecord');
+const Device = require('../models/Device');
+
+exports.createWasteRecord = async (req, res) => {
+    try {
+        const { weight, deviceId,deviceType } = req.body;
+
+        // Check if the device exists
+        const device = await Device.findOne({ deviceId });
+        if (!device) {
+            return res.status(404).json({ message: 'Device not found' });
+        }
+
+        // Create a new waste record
+        const newWasteRecord = new WasteRecord({
+            weight,
+            deviceId,
+            deviceType
+        });
+
+        // Save the new waste record
+        await newWasteRecord.save();
+
+        // Update the device's spaceLeft
+        const totalWasteWeight = await WasteRecord.aggregate([
+            { $match: { deviceId } },
+            { $group: { _id: null, totalWeight: { $sum: '$weight' } } }
+        ]);
+
+        const totalWeight = totalWasteWeight[0]?.totalWeight || 0;
+        const newSpaceLeft = device.capacity - totalWeight;
+
+        // Update the device with the new spaceLeft
+        device.spaceLeft = newSpaceLeft;
+        await device.save();
+
+        res.status(201).json(newWasteRecord);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getWasteRecordsByDeviceId = async (req, res) => {
+    try {
+        const { deviceId } = req.params;
+        const records = await WasteRecord.find({ deviceId }).sort({ date: -1 });
+        res.status(200).json(records);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// New function: Add manual waste record
+exports.addManualWasteRecord = async (req, res) => {
+    try {
+        const { weight, deviceId, deviceType, userId } = req.body;
+
+        // Check if the device exists
+        const device = await Device.findOne({ deviceId });
+        if (!device) {
+            return res.status(404).json({ message: 'Device not found' });
+        }
+
+        // Check if the device is malfunctioning
+        if (device.status === 'Malfunction') {
+            return res.status(400).json({ message: 'Cannot add waste. The device is malfunctioning.' });
+        }
+
+        // Create a new waste record
+        const newWasteRecord = new WasteRecord({
+            weight,
+            deviceId,
+            deviceType,
+            userId
+        });
+
+        // Save the new waste record
+        await newWasteRecord.save();
+
+        // Update the device's spaceLeft
+        const totalWasteWeight = await WasteRecord.aggregate([
+            { $match: { deviceId } },
+            { $group: { _id: null, totalWeight: { $sum: '$weight' } } }
+        ]);
+
+        const totalWeight = totalWasteWeight[0]?.totalWeight || 0;
+        const newSpaceLeft = device.capacity - totalWeight;
+
+        // Update the device with the new spaceLeft
+        device.spaceLeft = newSpaceLeft;
+        await device.save();
+
+        res.status(201).json(newWasteRecord);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+exports.getAllWasteRecords = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const records = await WasteRecord.find({userId: userId}).sort({ date: 1 }); // Fetch all records, sorted by most recent
+        res.status(200).json(records);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllWasteRecordsAdmin = async (req, res) => {
+    try {
+        const records = await WasteRecord.find().sort({ date: 1 }); // Fetch all records, sorted by most recent
+        res.status(200).json(records);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
