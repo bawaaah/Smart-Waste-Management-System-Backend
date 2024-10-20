@@ -10,6 +10,9 @@ const authRoutes = require("./routes/auth");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+const paymentRoutes = require('./routes/PaymentManagement/Payment')
+
+
 // Load environment variables
 dotenv.config();
 
@@ -33,6 +36,8 @@ mongoose
 app.use("/api/collections", collectionsRoute);
 app.use("/api/auth", authRoutes);
 
+// Use Routes
+app.use('/api/payments', paymentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
