@@ -7,6 +7,8 @@ const dotenv = require('dotenv');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
+const paymentRoutes = require('./routes/PaymentManagement/Payment')
+
 
 // Load environment variables
 dotenv.config();
@@ -25,6 +27,7 @@ mongoose
   .catch(err => console.log(err));
 
 // Use Routes
+app.use('/api/payments', paymentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
